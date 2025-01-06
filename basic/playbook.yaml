@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true        # run task as root user(for avoiding sudo errors)
+  tasks:
+   - name: Install nginx 
+     ansible.builtin.yum: 
+       name: nginx
+       state: present
+       update_cache: yes
+
+   - name: Nginx started & enabled at boot
+     ansible.builtin.service:
+       name: nginx
+       state: started
+       enabled: true
+
+   - name: Copy file to path
+     ansible.builtin.copy:
+       src: index.html       # give full path if file not in current dir
+       dest: /usr/share/nginx/html/
+       owner: root
+       group: root
+       mode: '0644'      # file permissions of index.html
